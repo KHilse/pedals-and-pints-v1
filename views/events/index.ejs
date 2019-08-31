@@ -1,0 +1,17 @@
+<h1><%=currentUser.firstname%>'s Events</h1>
+
+<% if (events && events.length > 0) {
+	events.forEach(event => { %>
+		<p><%=event.name%> on <%=event.date%></p>
+		<p><%=event.participants.length%> participants attending, 
+			<% event.participants.forEach(participant => { %>
+				<%=participant.username%> (<%=participant.firstname%>)
+			<% }) %></p>
+		<form method="GET" action="events/show/<%=event.id%>">
+			<input type="submit" value="Edit">
+		</form>
+		<hr />
+	<% }) %>
+<% } else { %>
+	<h2><a href="/events/<%=currentUser.id%>/new">Create an event!</a></h2>
+<% } %>

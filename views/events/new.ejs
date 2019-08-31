@@ -1,0 +1,11 @@
+<form method="POST" action="/events/<%=currentUser.id%>/new">
+	<label for="name">Name: </label>
+	<input type="text" name="name"><br />
+	<label for="date">Date: </label>
+	<input type="text" name="date"><br />
+	<label for="description">Description: </label>
+	<textarea name="description"></textarea><br />
+	<label for="logo">Ride logo pic URL: </label>
+	<input type="text" name="logo"><br />
+	<input type="submit" value="Create Event!">
+</form>

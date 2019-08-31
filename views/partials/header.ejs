@@ -1,0 +1,43 @@
+<nav>
+    <ul>
+        <% if (currentUser && currentUser.firstname) { %>
+            <li>
+                <a href="/profile">Welcome back, <%=currentUser.firstname%></a>
+            </li>
+            <li>
+                <a href="/events/<%=currentUser.id%>">Your Events</a>
+            </li>
+        <% } %>
+        <li>
+            <a href="/">Home</a>
+        </li>
+<!--         <li>
+            <a href="#">Link1</a>
+        </li>
+        <li>
+            <a href="#">Link2</a>
+        </li>
+ -->    </ul>
+    <ul>
+        <% if (currentUser) { %>
+            <li>
+                <a href="/profile">Profile</a>
+            </li>
+            <% if (currentUser.admin) { %>
+                <li>
+                    <a href="/profile/admin">Admin Profile</a>
+                </li>
+            <% } %>
+            <li>
+                <a href="/auth/logout">Log out</a>
+            </li>
+        <% } else { %>
+            <li>
+                <a href="/auth/signup">Sign up</a>
+            </li>
+            <li>
+                <a href="/auth/login">Log in</a>
+            </li>
+        <% } %>
+    </ul>
+</nav>

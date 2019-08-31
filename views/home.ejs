@@ -1,0 +1,7 @@
+<h1>Welcome to the app that combines two awesome things -- bicycling and drinking!</h1>
+<h2>Sign up (it's free), create an event, invite your friends, then get out and ride!</h2>
+<h3>Upcoming Events</h3>
+
+<% events.forEach(event => { %>
+	<p><%=event.name%>, <%=event.date%>, <%=event.ownerID%></p>
+<% }) %>

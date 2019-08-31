@@ -1,0 +1,6 @@
+<form method="POST" action="/event/<%=currentUser.id%>/show/<%=event.id%>/edit?_method=PUT">
+	<input name="name" type="text" value="<%=event.name%>">
+	<input name="date" type="date" value="<%=event.date%>">
+	<textarea name="description"><%=event.description%></textarea>
+	<input type="submit" value="Update Info">
+</form>

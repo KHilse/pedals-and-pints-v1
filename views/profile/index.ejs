@@ -1,0 +1,13 @@
+<h1><%=currentUser.firstname%>'s Profile Page</h1>
+
+<div class="profile">
+	<img class="left" src="<%=currentUser.profile%>" alt="user profile pic">
+	<p class="right">First Name: <%=currentUser.firstname%></p>
+	<p class="right">Last Name: <%=currentUser.lastname%></p>
+	<p class="right">Username: <%=currentUser.username%></p>
+	<p class="right">Is Admin: <%= currentUser.admin ? "Yes" : "No" %></p>
+	<p class="right">Email: <%=currentUser.email%></p>
+	<p class="right">Birthday: <%=currentUser.birthday.toDateString()%></p>
+	<p class="right">Bio: <%=currentUser.bio%></p>
+
+</div>
