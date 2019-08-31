@@ -4,7 +4,8 @@ const db = require("../models");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: process.env.mapboxAccessToken});
 const fetch = require("node-fetch");
-
+const methodOverride = require("method-override");
+router.use(methodOverride('_method'));
 
 // INDEX route
 router.get("/:userId", (req, res) => {
@@ -73,7 +74,8 @@ router.get("/:userId/show/:eventId", (req, res) => {
 })
 
 // EDIT Route
-router.put("/:userId/show/:eventId/edit", (req, res) => {
+router.put("/:userId/show/:eventId", (req, res) => {
+	console.log("EVENTS/EDIT PUT route");
 	var dateBits = req.body.date.split("-");
 	var fixedDate = dateBits[1] + "/" + dateBits[2] + "/" + dateBits[0];
 	db.event.findByPk(req.params.eventId)
@@ -83,11 +85,19 @@ router.put("/:userId/show/:eventId/edit", (req, res) => {
 			date: fixedDate,
 			description: req.body.description
 		})
-		res.redirect("/" + req.params.userId + "/show/" + req.params.eventId);
+		res.redirect("/events/" + req.params.userId + "/show/" + req.params.eventId);
 	})
 })
 
 
 // DELETE Route
+router.delete("/:userId/show/:eventId", (req, res) => {
+	console.log("EVENTS/EDIT DELETE route");
+	db.event.destroy({ where: { id: req.params.eventId }})
+	.then(event => {
+		res.redirect("/events/" + req.params.userId);
+	})
+})
+
 
 module.exports = router;
