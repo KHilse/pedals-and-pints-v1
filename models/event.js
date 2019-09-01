@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
   event.associate = function(models) {
     // associations can be defined here
     models.event.hasMany(models.waypoint);
-    models.event.belongsToMany(models.participant, { through: models.eventsParticipants });
+    models.event.belongsToMany(models.participant, {
+      through: models.eventsParticipants,
+      onDelete: "SET NULL"
+    });
 
   };
   return event;

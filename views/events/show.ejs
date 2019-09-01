@@ -3,8 +3,68 @@
 	<input name="date" type="date" value="<%=event.date%>">
 	<textarea name="description"><%=event.description%></textarea>
 	<input type="submit" value="Update Info">
+	<input type="submit" value="Delete Event" formmethod="POST" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
 </form>
 
-<form method="POST" action="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
-	<input type="submit" value="Delete Event">
+<p>Last updated <%=event.updatedAt%></p>
+
+<p>Waypoints (<%=event.waypoints.length%>)</p>
+<% event.waypoints.forEach(waypoint => { %>
+	<p><%=waypoint.name%></p>
+<% }) %>
+<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/add">
+	<input type="submit" value="Add!">
 </form>
+
+<p>Invitees</p>
+<% event.participants.forEach(participant => { %>
+	<p><%=participant.username%></p>
+<% }) %>
+
+<p>Invite More Participants!</p>
+<form method="POST" action="/events/<%=currentUser.id%>/show/<%=event.id%>/participants/add">
+<input type="hidden" name="id" value="<%=event.id%>">
+<select name="inviteeId">
+<% 	participants.forEach(p => {
+		if (isInInvitees(p.username, event.participants) == false) { %>
+			<option value="<%=p.id%>"><%=p.username%></option>
+<%		}
+ 	}) %>
+</select>
+<input type="submit" value="Add!">
+</form>
+
+<%	function isInInvitees(name, invitees) {
+		// take an invitee out of the possibles list so that
+		// the user sees only possibles that haven't been invited
+		for(invitee of invitees) {
+			if(invitee.username == name) {
+				return true;
+			}
+		}
+		return false;
+	}
+%>
+
+
+<!-- <h2>Participants (<%=event.participants.length%>)</h2>
+	<% event.participants.forEach(participant => { %>
+		<p><%=participant.username%> (<%=participant.firstname%>)</p>
+	<% }) %>
+<h2>Route</h2>
+	<% event.waypoints.forEach(waypoint => { %>
+		<p><%=waypoint.stop_number%><%=waypoint.name%></p>
+		<form method="POST" action="">			
+			<input type="submit" value="^" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/<%=waypoint.id%>/up">
+			<input type="submit" value="v" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/<%=waypoint.id%>/down">
+		</form>
+	<% }) %>
+
+
+
+
+
+
+<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/search">
+	<input type="submit" value="Add Waypoints">
+</form> -->

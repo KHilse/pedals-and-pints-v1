@@ -20,11 +20,20 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
+      birthday: {
+        type: Sequelize.DATEONLY
+      },
       email: {
         type: Sequelize.STRING
       },
       profile_img_url: {
         type: Sequelize.STRING
+      },
+      admin: {
+        type: Sequelize.BOOLEAN
+      },
+      bio: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

@@ -3,26 +3,57 @@ const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize, DataTypes) => {
   const participant = sequelize.define('participant', {
-    firstname: DataTypes.STRING,
+    firstname: {
+      type: DataTypes.STRING,
+    },
     lastname: DataTypes.STRING,
-    password: DataTypes.STRING,
-    username: DataTypes.STRING,
     email: DataTypes.STRING,
-    profile_img_url: DataTypes.STRING
+    username: DataTypes.STRING,
+    password: {
+      type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [8, 32],
+          msg: 'Your password needs to be 8-32 chars in length'
+        }
+      }
+    },
+    birthday: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    bio: DataTypes.TEXT,
+    profile_img_url: {
+      type: DataTypes.TEXT,
+      validate: {
+        isUrl: {
+          msg: 'Provide a valid image url!'
+        }
+      }
+    }
   }, {
+
     hooks: {
       beforeCreate: (pendingUser) => {
 
         // Hash the password before storing
         if (pendingUser && pendingUser.password) {
-          pendingUser.password = bcrypt.hashSync(pendingUser.password, 10);
+          pendingUser.password = bcrypt.hashSync(pendingUser.password, 12);
         }
       }
-    } 
+    }
+
   });
   participant.associate = function(models) {
     // associations can be defined here
-    models.participant.belongsToMany(models.event, { through: models.eventsParticipants });
+    models.participant.belongsToMany(models.event, {
+      through: models.eventsParticipants,
+      onDelete: "SET NULL"
+    });
     models.participant.hasMany(models.drink);
   };
 

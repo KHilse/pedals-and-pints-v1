@@ -1,0 +1,68 @@
+<h1>Add a waypoint to the Event</h1>
+<p>Event id: <%=eventId%></p>
+
+<% if (typeof breweryInfo === "object") { %>
+	<form method="POST" action="waypointadd">
+		<input type="hidden" name="lat" value="<%=breweryInfo.lat%>">
+		<input type="hidden" name="long" value="<%=breweryInfo.long%>">
+		<input type="hidden" name="eventId" value="<%=eventId%>">
+		<input type="hidden" name="untappd_id" value="<%=breweryInfo.untappdId%>">
+		<input type="text" name="breweryName" value="<%=breweryInfo.name%>" >
+		<input type="text" name="breweryAddress" value="<%=breweryInfo.address%>" >
+		<input type="text" name="breweryCity" value="<%=breweryInfo.city%>" >
+		<input type="text" name="breweryState" value="<%=breweryInfo.state%>" >
+		<input type="submit" value="Add">
+	</form>
+<% } %>
+<form method="POST" action="/events/<%=userId%>/show/<%=eventId%>/waypoints/add">
+	<label for="waypointName">Waypoint name:</label>
+	<input name="waypointName" type="text">
+	<label for="waypointLocation">Waypoint city,state (optional)</label>
+	<input name="waypointLocation" type="text">
+	<input type="submit" value="Search">
+</form>
+
+<% if ((typeof markers == "object") && (typeof breweryInfo == "object")) { %>
+
+	<div id="map" style="width: 500px; height: 500px"></div>
+
+	<script>
+			mapboxgl.accessToken = "<%=mapboxAccessToken%>";
+			var map = new mapboxgl.Map({
+				container: "map",
+				style: "mapbox://styles/mapbox/light-v10",
+				center: [<%=breweryInfo.long%>, <%=breweryInfo.lat%>],
+				zoom: 9
+			});
+
+			map.on('load', function(){
+			    map.addLayer({
+			      "id": "points",
+			      "type": "symbol",
+			      "source": {
+			        "type": "geojson",
+			        "data": {
+			          "type": "FeatureCollection",
+			          "features": [<%- markers %>]
+			        }
+			      },
+			      "layout": {
+			        "icon-image": "{icon}-15",
+			        "text-field": "{title}",
+			        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+			        "text-offset": [0, 0.6],
+			        "text-anchor": "top"
+			      }
+			    })
+			})
+
+		</script>	
+
+<% } else { %> 
+
+<p>Map not created </p>
+
+<p>breweryInfo: <%=(typeof breweryInfo)%></p>
+<p>markers: <%=(typeof markers)%></p>
+
+ <% } %>

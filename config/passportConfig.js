@@ -19,7 +19,7 @@ passport.serializeUser((user, callback) => {
 
 passport.deserializeUser((id, callback) => {
 	// Pass on full user info from id
-	db.user.findByPk(id)
+	db.participant.findByPk(id)
 	.then((user) => {
 		callback(null, user);
 	})
@@ -29,16 +29,16 @@ passport.deserializeUser((id, callback) => {
 // Implement the strategies
 
 passport.use(new localStrategy({
-		usernameField: "email",
+		usernameField: "username",
 		passwordField: "password"
-		}, (typedInEmail, typedInPassword, callback) => {
+		}, (typedInUsername, typedInPassword, callback) => {
 	// Try looking up our user by email
-	console.log("1", typedInEmail,typedInPassword);
-	db.user.findOne({
-		where: { email: typedInEmail }
+	console.log("1", typedInUsername,typedInPassword);
+	db.participant.findOne({
+		where: { username: typedInUsername }
 	})
 	.then((foundUser) => {
-		console.log("got a user", foundUser.email);
+		console.log("got a user", foundUser.username);
 		// If I didn't find a user matching email (foundUser == null)
 		// OR if I did find the user but password is incorrect
 		if (!foundUser || !foundUser.validPassword(typedInPassword)) {

@@ -7,11 +7,11 @@
 			<% event.participants.forEach(participant => { %>
 				<%=participant.username%> (<%=participant.firstname%>)
 			<% }) %></p>
-		<form method="GET" action="events/show/<%=event.id%>">
+		<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>">
 			<input type="submit" value="Edit">
 		</form>
 		<hr />
 	<% }) %>
-<% } else { %>
-	<h2><a href="/events/<%=currentUser.id%>/new">Create an event!</a></h2>
 <% } %>
+
+<h2><a href="/events/<%=currentUser.id%>/new">Create an event!</a></h2>

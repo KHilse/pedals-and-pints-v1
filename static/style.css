@@ -37,7 +37,7 @@ form {
     font-size: 18px;
     display: flex;
     flex-direction: column;
-    min-height: 30vh;
+    min-height: 10vh;
     width: 50vw;
     margin: 0 auto;
     border: 1px solid grey;

@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   eventsParticipants.associate = function(models) {
     // associations can be defined here
-    models.eventsParticipants.hasMany(models.drink);
   };
   return eventsParticipants;
 };

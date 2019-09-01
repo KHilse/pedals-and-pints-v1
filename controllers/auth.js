@@ -13,11 +13,11 @@ router.post('/signup', (req, res, next) => {
 	} else {
 	    //res.send('POST to signup:', req.body);
 	    // Passwords matched, create user if they don't already exist
-	    db.user.findOrCreate({
-	    	where: { email: req.body.email },
+	    db.participant.findOrCreate({
+	    	where: { username: req.body.username },
 	    	defaults: req.body
 	    })
-	    .spread((user, wasCreated) => {
+	    .spread((participant, wasCreated) => {
 	    	if (wasCreated) {
 	    		// Legit new user
 	    		passport.authenticate("local", {
