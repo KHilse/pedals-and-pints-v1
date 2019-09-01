@@ -51,11 +51,13 @@ app.use((req, res, next) => {
 app.use('/auth', require('./controllers/auth'));
 app.use("/profile", require("./controllers/profile"));
 app.use("/events", require("./controllers/events"));
+app.use("/ride", require("./controllers/ride"));
 
 // Routes
 app.get('/', (req, res) => {
 	db.event.findAll({
-		order: [['date', 'DESC']]
+		order: [['date', 'DESC']],
+		include: [ { model: db.participant }]
 	})
 	.then(events => {
 	    res.render('home', { events });

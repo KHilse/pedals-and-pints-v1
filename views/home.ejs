@@ -2,6 +2,22 @@
 <h2>Sign up (it's free), create an event, invite your friends, then get out and ride!</h2>
 <h3>Upcoming Events</h3>
 
-<% events.forEach(event => { %>
-	<p><%=event.name%>, <%=event.date%>, <%=event.ownerID%></p>
-<% }) %>
+<%
+	if (events.length == 0) { %>
+		<p class="event-title">No events on the calendar yet! Sign up and create one!</p> <%
+	} else {
+	 	events.forEach(event => { %>
+			<img class="event-logo" src="<%=event.logo%>">
+			<p class="event-title"><%=event.name%></p>
+			<p class="event-info"><%=event.date%> Created by: <%=event.owner_id%></p>
+			<p class="event-info"><%=event.description%></p> 
+			<p class="event-info"><%=event.participants.length%> participants attending!</p>
+			<% event.participants.forEach(p => {
+				if (p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
+					<form method="POST" action="/ride/<%=event.id%>">
+						<input type="submit" value="Join Ride!">
+					</form>
+			<%	}
+			})
+		})
+	} %>

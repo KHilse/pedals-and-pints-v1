@@ -1,0 +1,12 @@
+<h2>Select your drink from the list</h2>
+
+<form method="POST" action="/ride/<%=eventId%>/<%=waypointId%>/drinks/add">
+	<select name="beerChoice">
+		<% breweryInfo.beersList.forEach((beer, index) => { %>
+			<option value="<%=beer%>"><%=beer%></option>
+		<% }) %>
+	</select>
+	<input type="hidden" name="breweryName" value="<%=breweryInfo.name%>">
+	<input type="hidden" name="participantId" value="<%=currentUserId%>">
+	<input type="submit" value="I drank this!">
+</form>

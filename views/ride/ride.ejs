@@ -1,0 +1,19 @@
+<h1>Riding Day!</h1>
+
+<h2><%=event.name%></h2>
+<p><%=event.description%></p>
+
+<h2>Route</h2>
+<% if (!rideState.rideStarted) { %>
+	<p>Check into a waypoint and add the beers you drank!</p>
+<% } %>
+<% event.waypoints.forEach(waypoint => { %>
+	<p><%=waypoint.stop_number%> <%=waypoint.name%></p>
+	<p><%=waypoint.address%> <%=waypoint.city%>, <%=waypoint.state%></p>
+	<form method="POST" action="/ride/<%=event.id%>/<%=waypoint.id%>/waypointcheckin">
+		<input type="hidden" value="waypoint.id">
+		<input type="submit" value="Check In">
+		<input type="submit" value="What beers did you drink?" formmethod="GET" formaction="/ride/<%=event.id%>/<%=waypoint.id%>/drinks/add">
+	</form>
+<% }) %>
+
