@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     date: DataTypes.DATEONLY,
     description: DataTypes.TEXT,
-    logo_url: DataTypes.STRING,
+    logo: DataTypes.BLOB,
     owner_id: DataTypes.INTEGER
   }, {});
   event.associate = function(models) {
@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       through: models.eventsParticipants,
       onDelete: "SET NULL"
     });
+
   };
   return event;
 };

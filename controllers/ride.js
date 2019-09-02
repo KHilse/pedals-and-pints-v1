@@ -3,40 +3,81 @@ const db = require("../models");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: process.env.mapboxAccessToken});
 const fetch = require("node-fetch");
-
-
-router.post("/:eventId", (req, res) => {
-	console.log("RIDE ROOT POST route");
-	if (!(typeof req.app.locals.rideState == "object")) {
-		req.app.locals.rideState = {
-			waypoints: [],
-			currentWaypoint: 0,
-			rideStarted: false,
-			rideCompleted: false
-		}
-	}
-	res.redirect("/ride/" + req.params.eventId);
+const session = require('express-session');
+const helmet = require("helmet");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const sessionStore = new SequelizeStore({
+	db: db.sequelize,
+	expiration: 720 * 60 * 1000 // 12 hours
 })
-
 
 router.get("/:eventId", (req, res) => {
 	console.log("RIDE INDEX GET route");
-	db.event.findOne({
-		where: { id : req.params.eventId },
-		include: [{ model: db.waypoint }]
-		})
+	db.event.findByPk(req.params.eventId)
 	.then(event => {
-		res.render("ride/ride", {
-			event,
-			rideState: req.app.locals.rideState
+		db.ride.findOne({
+			where: { eventId : req.params.eventId },
+			include: [{ model: db.ridewaypoint,
+				include: [{ model: db.drink }] }]
+			})
+		.then(ride => {
+			console.log("***RIDE***:", ride);
+			res.render("ride/ride", {
+				event,
+				ride
+			})
+		})		
+	})
+})
+
+router.post("/:eventId", (req, res) => {
+	console.log("RIDE ROOT POST route");
+	db.event.findByPk(req.params.eventId, {
+		include: [{ model: db.waypoint }]
+	})
+	.then(event => {
+		db.participant.findOne({
+			where: { id: res.locals.currentUser.id }
+		})
+		.then(participant => {
+			participant.createRide({
+				eventId: req.params.eventId,
+				started: true,
+				ended: false
+			})
+			.then(result => {
+				event.waypoints.forEach(waypoint => {
+					result.createRidewaypoint({
+						name: waypoint.name,
+						address: waypoint.address,
+						city: waypoint.city,
+						state: waypoint.state,
+						untappd_id: waypoint.untappd_id,
+						stop_number: waypoint.stop_number,
+						eventId: event.id,
+						long: waypoint.long,
+						lat: waypoint.lat,
+						checkedIn: false,
+						rideId: result.id
+					})
+				})
+
+				res.redirect("/ride/" + req.params.eventId);			
+			})
 		})
 	})
-
 })
 
 router.post("/:eventId/:waypointId/waypointcheckin", (req, res) => {
-
+	res.locals.rideState.currentWaypoint = req.params.waypointId;
+	res.locals.rideState.waypoints.push(req.params.waypointId);
 })
+
+router.get("/:eventId/:waypointId/end", (req, res) => {
+	res.locals.rideState.rideCompleted = true;
+	res.render("events/end");
+})
+
 
 router.get("/:eventId/:waypointId/drinks/add", (req, res) => {
 	console.log("ADDWAYPOINTS POST route, eventId", req.params.eventId);
@@ -98,19 +139,22 @@ router.get("/:eventId/:waypointId/drinks/add", (req, res) => {
 
 })
 
-
 router.post("/:eventId/:waypointId/drinks/add", (req, res) => {
-	db.drink.create({
-		name: req.body.beerChoice,
-		brewery: req.body.breweryName,
-		abv: 6.0,
-		participantId: req.body.participantId,
-		size: 16.0
+	db.ridewaypoint.findByPk(req.params.waypointId)
+	.then(ridewaypoint => {
+		db.drink.create({
+			name: req.body.beerChoice,
+			brewery: req.body.breweryName,
+			abv: 6.0,
+			eventId: req.params.eventId,
+			ridewaypointId: req.params.waypointId,
+			size: 16.0
+		})
+		.then(drink => {
+			ridewaypoint.addDrink(drink);
+			res.redirect("/ride/" + req.params.eventId);
+		})
 	})
-	.then(result => {
-		res.redirect("/ride/" + req.params.eventId);
-	})
-
 })
 
 module.exports = router;

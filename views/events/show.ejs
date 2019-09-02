@@ -46,25 +46,3 @@
 	}
 %>
 
-
-<!-- <h2>Participants (<%=event.participants.length%>)</h2>
-	<% event.participants.forEach(participant => { %>
-		<p><%=participant.username%> (<%=participant.firstname%>)</p>
-	<% }) %>
-<h2>Route</h2>
-	<% event.waypoints.forEach(waypoint => { %>
-		<p><%=waypoint.stop_number%><%=waypoint.name%></p>
-		<form method="POST" action="">			
-			<input type="submit" value="^" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/<%=waypoint.id%>/up">
-			<input type="submit" value="v" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/<%=waypoint.id%>/down">
-		</form>
-	<% }) %>
-
-
-
-
-
-
-<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/search">
-	<input type="submit" value="Add Waypoints">
-</form> -->

@@ -4,16 +4,31 @@
 <p><%=event.description%></p>
 
 <h2>Route</h2>
-<% if (!rideState.rideStarted) { %>
+<% if (!ride.started) { %>
 	<p>Check into a waypoint and add the beers you drank!</p>
 <% } %>
-<% event.waypoints.forEach(waypoint => { %>
+<% ride.ridewaypoints.forEach(waypoint => { %>
 	<p><%=waypoint.stop_number%> <%=waypoint.name%></p>
 	<p><%=waypoint.address%> <%=waypoint.city%>, <%=waypoint.state%></p>
-	<form method="POST" action="/ride/<%=event.id%>/<%=waypoint.id%>/waypointcheckin">
-		<input type="hidden" value="waypoint.id">
-		<input type="submit" value="Check In">
-		<input type="submit" value="What beers did you drink?" formmethod="GET" formaction="/ride/<%=event.id%>/<%=waypoint.id%>/drinks/add">
-	</form>
+		<form method="POST" action="/ride/<%=event.id%>/<%=waypoint.id%>/waypointcheckin">
+			<input type="hidden" value="<%=waypoint.id%>">
+	<% if (waypoint.checkedIn == false) { %>
+			<input type="submit" value="Check In">
+	<% } else { %>
+			<p>Checked in at <%=waypoint.name%><p>
+	<% } %>
+			<p>Consumed <%=waypoint.drinks.length%> beers!</p>
+			<% if (waypoint.drinks.length > 0) { %>
+			<% waypoint.drinks.forEach(drink => { %>
+				<p>Enjoyed <%=drink.name%></p>
+			<% }) %>
+			<input type="submit" value="Add another drink?" formmethod="GET" formaction="/ride/<%=event.id%>/<%=waypoint.id%>/drinks/add">
+			<% } else { %>
+			<input type="submit" value="What beers did you drink?" formmethod="GET" formaction="/ride/<%=event.id%>/<%=waypoint.id%>/drinks/add">
+			<% } %>
+		</form>
 <% }) %>
 
+<form method="POST" action="/ride/<%=event.id%>/end">
+	<input type="submit" value="Finish ride!">
+</form>

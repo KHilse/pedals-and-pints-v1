@@ -1,39 +1,45 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('ridewaypoints', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstname: {
+      rideId: {
+        type: Sequelize.INTEGER
+      },
+      name: {
         type: Sequelize.STRING
       },
-      lastname: {
+      address: {
         type: Sequelize.STRING
       },
-      email: {
+      city: {
         type: Sequelize.STRING
       },
-      username: {
+      state: {
         type: Sequelize.STRING
       },
-      password: {
-        type: Sequelize.STRING
+      untappd_id: {
+        type: Sequelize.INTEGER
       },
-      birthday: {
-        type: Sequelize.DATE
+      stop_number: {
+        type: Sequelize.INTEGER
       },
-      admin: {
+      eventId: {
+        type: Sequelize.INTEGER
+      },
+      long: {
+        type: Sequelize.FLOAT
+      },
+      lat: {
+        type: Sequelize.FLOAT
+      },
+      checkedIn: {
         type: Sequelize.BOOLEAN
-      },
-      bio: {
-        type: Sequelize.TEXT
-      },
-      profile: {
-        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +52,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('ridewaypoints');
   }
 };

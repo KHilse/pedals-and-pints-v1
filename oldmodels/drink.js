@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     brewery: DataTypes.STRING,
     abv: DataTypes.FLOAT,
     waypointId: DataTypes.INTEGER,
-    ridewaypointId: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
     size: DataTypes.FLOAT
   }, {});

@@ -44,6 +44,7 @@ app.use((req, res, next) => {
 	res.locals.alerts = req.flash();
 	res.locals.currentUser = req.user; // user is added to req by passport
 	res.locals.moment = moment;
+	req.session.rideState = {};
 	next();
 })
 

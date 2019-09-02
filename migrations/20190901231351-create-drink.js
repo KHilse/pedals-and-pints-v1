@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('events', {
+    return queryInterface.createTable('drinks', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,17 +11,23 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      date: {
-        type: Sequelize.DATEONLY
+      brewery: {
+        type: Sequelize.STRING
       },
-      description: {
-        type: Sequelize.TEXT
+      abv: {
+        type: Sequelize.FLOAT
       },
-      logo: {
-        type: Sequelize.BLOB
-      },
-      owner_id: {
+      waypointId: {
         type: Sequelize.INTEGER
+      },
+      ridewaypointId: {
+        type: Sequelize.INTEGER
+      },
+      eventId: {
+        type: Sequelize.INTEGER
+      },
+      size: {
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('events');
+    return queryInterface.dropTable('drinks');
   }
 };

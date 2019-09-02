@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const waypoint = sequelize.define('waypoint', {
+  const ridewaypoint = sequelize.define('ridewaypoint', {
     name: DataTypes.STRING,
     address: DataTypes.STRING,
     city: DataTypes.STRING,
@@ -9,11 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     stop_number: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
     long: DataTypes.FLOAT,
-    lat: DataTypes.FLOAT
+    lat: DataTypes.FLOAT,
+    checkedIn: DataTypes.BOOLEAN
   }, {});
-  waypoint.associate = function(models) {
+  ridewaypoint.associate = function(models) {
     // associations can be defined here
-    models.waypoint.belongsTo(models.event);
+    models.ridewaypoint.belongsTo(models.ride);
+    models.ridewaypoint.hasMany(models.drink);
    };
-  return waypoint;
+  return ridewaypoint;
 };

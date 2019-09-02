@@ -10,6 +10,13 @@
 		<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>">
 			<input type="submit" value="Edit">
 		</form>
+			<% event.participants.forEach(p => {
+				if (p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
+					<form method="POST" action="/ride/<%=event.id%>">
+						<input type="submit" value="Join Ride!">
+					</form>
+			<%	}
+			}) %>
 		<hr />
 	<% }) %>
 <% } %>

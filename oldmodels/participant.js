@@ -54,8 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       through: models.eventsParticipants,
       onDelete: "SET NULL"
     });
-    models.participant.hasMany(models.ride);
-
  };
 
   // Custom function validPassword will check on instance of the model (specific user)
