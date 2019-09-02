@@ -2,18 +2,41 @@
 
 <% if (events && events.length > 0) {
 	events.forEach(event => { %>
-		<p><%=event.name%> on <%=event.date%></p>
-		<p><%=event.participants.length%> participants attending, 
-			<% event.participants.forEach(participant => { %>
-				<%=participant.username%> (<%=participant.firstname%>)
+		<p><span class="event-title"><%=event.name%></span> on <%=event.date%></p>
+
+		<% var first = true;
+			event.waypoints.forEach(waypoint => {
+				if (!first) {
+					%> => <%
+				} else {
+					first = false;
+				} %>
+				<strong><%=waypoint.name%></strong>
+		<% }) %>
+
+		<% var plural = "";
+			if (event.participants.length > 1) {
+				plural = "s";
+			}
+		%>
+		<p><%=event.participants.length%> participant<%=plural%> attending, 
+			<% 	first = true;
+				event.participants.forEach(participant => { 
+					if (!first) {
+						%>, <%
+					} else {
+						first = false;
+					} %>
+				<strong><%=participant.username%></strong> (<%=participant.firstname%>)
 			<% }) %></p>
 		<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>">
-			<input type="submit" value="Edit">
+			<input class="btn btn-edit" type="submit" value="Edit Event">
+			<input class="btn btn-danger" type="submit" value="Delete Event" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
 		</form>
 			<% event.participants.forEach(p => {
 				if (p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
 					<form method="POST" action="/ride/<%=event.id%>">
-						<input type="submit" value="Join Ride!">
+						<input class="btn btn-action" type="submit" value="Join Ride!">
 					</form>
 			<%	}
 			}) %>

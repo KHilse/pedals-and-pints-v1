@@ -12,28 +12,39 @@
 		<p class="event-title">No events on the calendar yet! Sign up and create one!</p> <%
 	} else {
 	 	events.forEach(event => { %>
-			<img class="event-logo" src="<%=event.logo%>">
-			<p class="event-title"><%=event.name%></p>
-			<p class="event-info"><%=event.date%> Created by:
-			 <% event.participants.forEach(p => { 
-			 	if (p.id == event.owner_id) {
-			 		%><%=p.username%> (<%=p.firstname%>)<%
-			 	}
-			 }) %></p>
-			<p class="event-info"><%=event.description%></p> 
-			<p class="event-info"><%=event.participants.length%> participants attending!</p><%	
-			var first = true;
-			event.participants.forEach(p => {
-				if (!first) {
-					first = false;
-					%>, <%
-				}
-				%><span><%=p.username%> (<%=p.firstname%>)</span><%
-				if (typeof currentUser == "object" && p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
-					<form method="POST" action="/ride/<%=event.id%>">
-						<input type="submit" value="Join Ride!">
-					</form>
-			<%	}
-			})
+	 		<div class="event-container">
+				<img class="event-logo" src="<%=event.logo_url%>">
+				<div class="clearfix">
+				<p class="event-title"><%=event.name%></p>
+				<p class="event-info">On <%=event.date%>, Created by:
+				 <% event.participants.forEach(p => { 
+				 	if (p.id == event.owner_id) {
+				 		%><strong><%=p.username%> (<%=p.firstname%>)</strong><%
+				 	}
+				 }) %></p>
+				<p class="event-info"><%=event.description%></p> 
+				<p class="event-info"><%=event.participants.length%> participants attending!</p>
+				<p><%	
+				var first = true;
+				var addForm = false;
+				event.participants.forEach(p => {
+					if (!first) {
+						%>, <%
+					} else {
+						first = false;
+					}
+					%><%=p.username%> (<%=p.firstname%>)<%
+					if (typeof currentUser == "object" && p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) {
+						addForm = true;
+					}
+				})
+				%></p>
+					<% if (addForm) { %>
+						<form method="POST" action="/ride/<%=event.id%>">
+							<input type="submit" value="Join Ride!">
+						</form>
+					<% } %>
+				 </div>
+			</div> <%
 		})
 	} %>

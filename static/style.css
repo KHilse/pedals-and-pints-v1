@@ -37,18 +37,29 @@ form {
     font-size: 18px;
     display: flex;
     flex-direction: column;
-    min-height: 10vh;
-    width: 50vw;
+    width: 30vw;
     margin: 0 auto;
-    border: 1px solid grey;
+/*    border: 1px solid grey;
     box-shadow: 10px 5px 5px black;
     border-radius: 25px;
-    padding: 2%;
-    background-image: linear-gradient(to bottom right, cyan, blue);
-    /* background-image: repeating-linear-gradient(red, yellow 10%, green 20%); */
+*/    padding: 2%;
+/*    background-image:  linear-gradient(#840, #420);
+*/    /* background-image: repeating-linear-gradient(red, yellow 10%, green 20%); */
 }
 
-h1, h2, h3, p {
+input, textarea, select {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+input[type=submit] {
+    padding: 4px;
+    min-width: 200px;
+    max-width: 256px;
+}
+
+h1, h2, h3 {
     margin: 10px 8px;
     text-align: center;
     font-family: sans-serif;
@@ -57,6 +68,8 @@ h1, h2, h3, p {
 img {
     margin: 10px;
 }
+
+
 
 .clearfix::after {
   content: "";
@@ -78,6 +91,23 @@ img {
     border-radius: 15px;
 }
 
+.btn {
+    align-self: center;
+}
+
+.btn-action {
+    background-color: orange;
+}
+
+.btn-edit {
+    background-color: darkgreen;
+    color: white;
+}
+
+.btn-danger {
+    background-color: darkred;
+    color: white;
+}
 .error-box {
     background-color: red;
     color: white;
@@ -85,8 +115,37 @@ img {
     padding: 20px;
 }
 
+.event-container {
+    text-align: left;
+    border: 3px solid #840;
+    border-radius: 20px;
+    margin: 8px 0;
+    padding: 12px;
+}
+
+.event-container img {
+    margin: 0 20px 10px 0;
+    max-width: 128px;
+    max-height: 128px;
+}
+
+.event-logo {
+    float: left;
+}
+
+.event-title {
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
 .homepagetext {
     margin: 20px;
+}
+
+.small-text {
+    font-size: .7em;
 }
 
 .success-box {
@@ -129,6 +188,10 @@ img {
 .close-button {
     float: right;
     cursor: pointer;
+}
+
+.right {
+    text-align: right;
 }
 
 footer {

@@ -2,26 +2,40 @@
 	<input name="name" type="text" value="<%=event.name%>">
 	<input name="date" type="date" value="<%=event.date%>">
 	<textarea name="description"><%=event.description%></textarea>
-	<input type="submit" value="Update Info">
-	<input type="submit" value="Delete Event" formmethod="POST" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
+	<input class="btn btn-action" type="submit" value="Update Info">
+	<input class="btn btn-danger" type="submit" value="Delete Event" formmethod="POST" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
 </form>
 
-<p>Last updated <%=event.updatedAt%></p>
-
-<p>Waypoints (<%=event.waypoints.length%>)</p>
+<p class="small-text right"><i>Last updated <%=event.updatedAt%></i></p>
+<hr />
+<div  class="clearfix">
+<p><strong><%=event.waypoints.length%> waypoints on this ride:</strong></p>
+<div style="float: left">
 <% event.waypoints.forEach(waypoint => { %>
-	<p><%=waypoint.name%></p>
+	<p><strong><%=waypoint.name%></strong></p>
 <% }) %>
 <form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>/waypoints/add">
 	<input type="submit" value="Add!">
 </form>
+</div> <!-- waypoint list -->
+<% if (typeof markers == "object") { %>
+	<div id="map" style="float: right; width: 256px; height: 256px"></div>
+<% } %>
+</div>
+<hr />
 
-<p>Invitees</p>
-<% event.participants.forEach(participant => { %>
-	<p><%=participant.username%></p>
+<p><strong>Invitees</strong></p>
+<p>
+<%	var first = true;
+	event.participants.forEach(participant => {
+		if (!first) {
+			%>, <%
+		} else {
+			first = false;
+		} %>
+	<strong><%=participant.username%></strong> (<%=participant.firstname%>)
 <% }) %>
-
-<p>Invite More Participants!</p>
+</p>
 <form method="POST" action="/events/<%=currentUser.id%>/show/<%=event.id%>/participants/add">
 <input type="hidden" name="id" value="<%=event.id%>">
 <select name="inviteeId">
@@ -31,7 +45,7 @@
 <%		}
  	}) %>
 </select>
-<input type="submit" value="Add!">
+<input type="submit" value="Invite Another Participant!">
 </form>
 
 <%	function isInInvitees(name, invitees) {
@@ -46,3 +60,36 @@
 	}
 %>
 
+	<script>
+			mapboxgl.accessToken = "<%=mapboxAccessToken%>";
+			var map = new mapboxgl.Map({
+				container: "map",
+				style: "mapbox://styles/mapbox/light-v10",
+				center: [<%=long%>, <%=lat%>],
+				zoom: 10
+			});
+
+			map.on('load', function(){
+			    map.addLayer({
+			      "id": "points",
+			      "type": "symbol",
+			      "source": {
+			        "type": "geojson",
+			        "data": {
+			          "type": "FeatureCollection",
+			          "features": [<%- markers %>]
+			        }
+			      },
+			      "layout": {
+			        "icon-image": "{icon}-15",
+					"icon-allow-overlap": true,
+			        "text-field": "{title}",
+					"text-allow-overlap": true,
+			        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+			        "text-offset": [0, 0.6],
+			        "text-anchor": "top"
+			      }
+			    })
+			})
+
+		</script>	

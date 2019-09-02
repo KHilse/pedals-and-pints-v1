@@ -13,8 +13,11 @@ router.get("/:userId", (req, res) => {
 		where: {
 			owner_id: req.user.id
 		},
+		order: [['date', 'DESC']],
 		include: [	{ model: db.participant },
-					{ model: db.waypoint 	}]
+					{ model: db.waypoint,
+						order: [[ 'createdAt', 'ASC' ]] }
+				]
 	})
 	.then(events => {
 		console.log(`Found ${events.length} events`);
@@ -38,6 +41,7 @@ router.post("/:userId/new", (req, res) => {
 		name: req.body.name,
 		date: req.body.date,
 		description: req.body.description,
+		logo_url: req.body.logo_url,
 		owner_id: req.params.userId
 		})
 	.then(event => {
@@ -68,12 +72,36 @@ router.get("/:userId/show/:eventId", (req, res) => {
 	db.participant.findAll()
 	.then(participants => {
 		db.event.findOne({where: { id: req.params.eventId },
-						 include: [ { model: db.participant }, { model: db.waypoint }] })
+						 include: [ { model: db.participant },
+					{ model: db.waypoint,
+						order: [[ 'createdAt', 'DESC' ]] }
+						  ] })
 		.then(event => {
 			console.log("Found event with waypoints and participants");
+
+			var markers = [];
+			markers = event.waypoints.map(wp => {
+				var markerObj = {
+					"type": "Feature",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [wp.long, wp.lat]
+						},
+					"properties": {
+						"title": wp.name,
+						"icon": "beer"
+						}
+				}
+				return JSON.stringify(markerObj);
+			});
+
 			res.render("events/show", {
 				event,
 				participants,
+				markers,
+				long: event.waypoints[0].long,
+				lat: event.waypoints[0].lat,
+				mapboxAccessToken: process.env.mapboxAccessToken,
 				currentUser: req.user
 			})
 		})
@@ -114,12 +142,19 @@ router.delete("/:userId/show/:eventId", (req, res) => {
 
 // Add Participant
 router.post("/:userId/show/:eventId/participants/add", (req, res) => {
-	db.participant.findByPk(req.body.id)
+	console.log("Add participant to event");
+	db.participant.findByPk(req.body.inviteeId)
 	.then(participant => {
 		db.event.findByPk(req.params.eventId)
 		.then(event => {
-			event.addParticipant(participant);
-			res.redirect("/events/" + req.params.userId + "/show/" + req.params.eventId);			
+			event.addParticipant(participant)
+			.then(result => {
+				console.log("Paricipant added");
+				res.redirect("/events/" + req.params.userId + "/show/" + req.params.eventId);			
+			})
+			.catch(err => {
+				console.log("ERROR: failed to attach participant to event");
+			})
 		})
 	})
 })
@@ -277,7 +312,7 @@ router.post("/:userId/show/:eventId/waypoints/waypointadd", (req, res) => {
 		lat: Number(req.body.lat)
 	})
 	.then(() => {
-		res.redirect("/events/" + req.params.userId + "/show/" + req.params.eventId + "/waypoints/add");
+		res.redirect("/events/" + req.params.userId + "/show/" + req.params.eventId);
 	})
 })
 
