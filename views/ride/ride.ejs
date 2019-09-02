@@ -7,7 +7,9 @@
 <% if (!ride.started) { %>
 	<p>Check into a waypoint and add the beers you drank!</p>
 <% } %>
+<hr />
 <% ride.ridewaypoints.forEach(waypoint => { %>
+	
 	<p><%=waypoint.stop_number%> <%=waypoint.name%></p>
 	<p><%=waypoint.address%> <%=waypoint.city%>, <%=waypoint.state%></p>
 		<form method="POST" action="/ride/<%=event.id%>/<%=waypoint.id%>/waypointcheckin">

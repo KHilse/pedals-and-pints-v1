@@ -1,0 +1,21 @@
+<h1>You finished the ride!</h1>
+<h2>(And you finished lots of beers too!)</h2>
+
+<%	var beersConsumed = 0;
+	ride.ridewaypoints.forEach(waypoint => {
+		beersConsumed += waypoint.drinks.length;
+	})
+	var finishImages = [	"https://media.giphy.com/media/VQ77RNKX0nyaA/giphy.gif",
+							"https://media.giphy.com/media/WNJPcXEx4b0GnPlrqU/giphy.gif",
+							"https://media.giphy.com/media/452hCVWOWzvVScW4BA/giphy.gif",
+							"https://media.giphy.com/media/8cgqQg9oEAek7WZFlW/giphy.gif"];
+%>
+
+<div class="clearfix" style="text-align: center">
+<img src="<%=finishImages[Math.floor(Math.random()*finishImages.length)]%>">
+
+<p><strong>You stopped at <%=ride.ridewaypoints.length%> locations and drank <%=beersConsumed%> beers!</strong></p>
+</div>
+<hr />
+
+<a href="/">Back to the homepage</a>

@@ -21,7 +21,7 @@ router.get("/:eventId", (req, res) => {
 				include: [{ model: db.drink }] }]
 			})
 		.then(ride => {
-			console.log("***RIDE***:", ride);
+			console.log("***RIDE***:");
 			res.render("ride/ride", {
 				event,
 				ride
@@ -69,20 +69,45 @@ router.post("/:eventId", (req, res) => {
 })
 
 router.post("/:eventId/:waypointId/waypointcheckin", (req, res) => {
-	res.locals.rideState.currentWaypoint = req.params.waypointId;
-	res.locals.rideState.waypoints.push(req.params.waypointId);
+	console.log("WAYPOINT checking in");
+	db.event.findByPk(req.params.eventId)
+	.then(event => {
+		db.ridewaypoint.findByPk(req.params.waypointId)
+		.then(waypoint => {
+			waypoint.update({
+				checkedIn: true
+			})
+			.then(result => {
+				console.log("CHECKIN RESULT", result);
+				res.redirect("/ride/" + req.params.eventId);
+			})
+
+		})
+	})
 })
 
-router.get("/:eventId/:waypointId/end", (req, res) => {
-	res.locals.rideState.rideCompleted = true;
-	res.render("events/end");
+router.post("/:eventId/end", (req, res) => {
+	db.ride.findOne({
+		where: { eventId : req.params.eventId },
+		include: [{ model: db.ridewaypoint,
+			include: [{ model: db.drink }] }]
+	})
+	.then(ride => {
+		ride.update({ ended: true })
+		.then(result => {
+			console.log("END RIDE", ride);
+			res.render("ride/end", {
+				ride
+			});
+		})
+	})
 })
 
 
 router.get("/:eventId/:waypointId/drinks/add", (req, res) => {
 	console.log("ADDWAYPOINTS POST route, eventId", req.params.eventId);
 	// Get existing waypoints to show on map
-	db.waypoint.findByPk(req.params.waypointId)
+	db.ridewaypoint.findByPk(req.params.waypointId)
 	.then(waypoint => {
 		// Use Untappd to get brewery info for searched brewery name
 		var breweryFetchString = "https://api.untappd.com/v4/search/brewery?client_id=" + process.env.UNTAPPD_CLIENT_ID + "&client_secret=" + process.env.UNTAPPD_CLIENT_SECRET + "&q=";
