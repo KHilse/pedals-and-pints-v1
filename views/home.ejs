@@ -1,5 +1,10 @@
-<h1>Welcome to the app that combines two awesome things -- bicycling and drinking!</h1>
-<h2>Sign up (it's free), create an event, invite your friends, then get out and ride!</h2>
+<div style="float: left">
+	<img src="./img/logo.png" width="256" height="256">
+</div>
+<div class="clearfix">
+<h1 class="homepagetext">Welcome to the app that combines two awesome things -- bicycling and drinking!</h1>
+<h2 class="homepagetext">Sign up (it's free), create an event, invite your friends, then get out and ride!</h2>
+</div>
 <h3>Upcoming Events</h3>
 
 <%
@@ -9,17 +14,26 @@
 	 	events.forEach(event => { %>
 			<img class="event-logo" src="<%=event.logo%>">
 			<p class="event-title"><%=event.name%></p>
-			<p class="event-info"><%=event.date%> Created by: <%=event.owner_id%></p>
+			<p class="event-info"><%=event.date%> Created by:
+			 <% event.participants.forEach(p => { 
+			 	if (p.id == event.owner_id) {
+			 		%><%=p.username%> (<%=p.firstname%>)<%
+			 	}
+			 }) %></p>
 			<p class="event-info"><%=event.description%></p> 
-			<p class="event-info"><%=event.participants.length%> participants attending!</p>
-			<% if (typeof currentUser == "object") {
-				event.participants.forEach(p => {
-					if (p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
-						<form method="POST" action="/ride/<%=event.id%>">
-							<input type="submit" value="Join Ride!">
-						</form>
-				<%	}
-				})
-			}
+			<p class="event-info"><%=event.participants.length%> participants attending!</p><%	
+			var first = true;
+			event.participants.forEach(p => {
+				if (!first) {
+					first = false;
+					%>, <%
+				}
+				%><span><%=p.username%> (<%=p.firstname%>)</span><%
+				if (typeof currentUser == "object" && p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>
+					<form method="POST" action="/ride/<%=event.id%>">
+						<input type="submit" value="Join Ride!">
+					</form>
+			<%	}
+			})
 		})
 	} %>

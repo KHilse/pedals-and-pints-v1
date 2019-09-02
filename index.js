@@ -57,11 +57,15 @@ app.use("/ride", require("./controllers/ride"));
 // Routes
 app.get('/', (req, res) => {
 	db.event.findAll({
+		where: { date: { [db.Sequelize.Op.gt]: new Date() - (1000 * 60 * 60 * 24 * 7) }},
 		order: [['date', 'DESC']],
+		limit: 5,
 		include: [ { model: db.participant }]
 	})
 	.then(events => {
-	    res.render('home', { events });
+	    res.render('home', {
+	    	events
+	    });
 	})
 })
 
