@@ -31,7 +31,7 @@
 			<% }) %></p>
 		<form method="GET" action="/events/<%=currentUser.id%>/show/<%=event.id%>">
 			<input class="btn btn-edit" type="submit" value="Edit Event">
-			<input class="btn btn-danger" type="submit" value="Delete Event" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
+			<input class="btn btn-danger" type="submit" value="Delete Event" formmethod="POST" formaction="/events/<%=currentUser.id%>/show/<%=event.id%>?_method=DELETE">
 		</form>
 			<% event.participants.forEach(p => {
 				if (p.id == currentUser.id && (event.date == moment().format("YYYY-MM-DD"))) { %>

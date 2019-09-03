@@ -78,7 +78,11 @@ router.get("/:userId/show/:eventId", (req, res) => {
 						  ] })
 		.then(event => {
 			console.log("Found event with waypoints and participants");
-
+			var lat, long = 0.0;
+			if (event.waypoints.length > 0) {
+				long = event.waypoints[0].long;
+				lat = event.waypoints[0].lat;
+			}
 			var markers = [];
 			markers = event.waypoints.map(wp => {
 				var markerObj = {
@@ -99,14 +103,14 @@ router.get("/:userId/show/:eventId", (req, res) => {
 				event,
 				participants,
 				markers,
-				long: event.waypoints[0].long,
-				lat: event.waypoints[0].lat,
+				long: long,
+				lat: lat,
 				mapboxAccessToken: process.env.mapboxAccessToken,
 				currentUser: req.user
 			})
 		})
 		.catch(err => {
-			console.log("ERROR finding a particular event");
+			console.log("ERROR finding a particular event", err);
 		})		
 	})
 })
