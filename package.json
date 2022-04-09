@@ -22,7 +22,7 @@
     "flash": "^1.1.0",
     "helmet": "^3.20.1",
     "method-override": "^3.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
