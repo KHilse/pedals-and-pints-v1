@@ -16,7 +16,7 @@
     "connect-session-sequelize": "^6.0.0",
     "dotenv": "^8.1.0",
     "ejs": "^2.6.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.16.2",
     "flash": "^1.1.0",
